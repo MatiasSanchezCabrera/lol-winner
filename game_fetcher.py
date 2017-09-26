@@ -41,25 +41,25 @@ class Fetcher(object):
 	    self.get_matches_for_account(result.json()['accountId'])
 
 	def get_fellow_accounts(self, accounts):
-	    for account in accounts:
-	        self.get_matches_for_account(account)
+	    for account_id in accounts:
+	        self.get_matches_for_account(account_id)
 
 	def get_matches_for_account(self, account_id):
 	    result = requests.get(self.recent_games + str(account_id) + self.season_filter, headers=self.headers)    
 	    time.sleep(0.84) # Sleep due to rate limit on api key (100 requests each 120 seconds)
 	    if result.status_code in [200]:
-	    	print 'Matches for account {}'.format(account_id)
+		    print 'Matches for account {}'.format(account_id)
 		    matches = result.json()
 		    self.save_account_fetched(account_id, matches)
 		    self.get_match_detail(matches, self.get_fetched_matches())	    	
 	    else:		    
 		    print 'Banned {}'.format(account_id)
-	    	self.save_account_banned(account_id)
+		    self.save_account_banned(account_id)
 
-	def get_match_detail(self, matches, banned_matches):
+	def get_match_detail(self, matches, fetched_matches):
 		try:
 		    for match in matches['matches']:
-		        if match['gameId'] not in banned_matches:
+		        if match['gameId'] not in fetched_matches:
 		            result = requests.get(self.match_detail + str(match['gameId']), headers=self.headers)
 		            time.sleep(0.84) # Sleep due to rate limit on api key (100 requests each 120 seconds)
 		            if result.json()['gameVersion'][:len(self.current_patch)] not in [self.current_patch]: return
