@@ -6,7 +6,7 @@ This file contains the definition of the Fetcher object which searches for match
 
 If you wish to use the Fetcher, you'll need to get a Riot Games API Key (https://developer.riotgames.com/) and a postgres database with the following tables:
 
-***matches_matches***
+***matches_match***
 - match_id (bigint)
 - match_detail (json)
 - region (varchar(5))
